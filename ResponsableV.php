@@ -44,5 +44,10 @@ class Responsable{
                "   NOMBRE: ".$this->getNombre()."\n".
                "   APELLIDO: ".$this->getApellido()."\n";
     }
-
+    //Modifico la informacion el responsable
+    public function modificarResponable($nuevoNumEmpleado,$nuevoNombre,$nuevoApellido){
+        $this->setNumEmpleado($nuevoNumEmpleado);
+        $this->setNombre($nuevoNombre);
+        $this->setApellido($nuevoApellido);
+    } 
 }

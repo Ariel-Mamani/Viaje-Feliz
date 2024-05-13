@@ -4,7 +4,7 @@ class Viaje{
     private $destino;
     private $cantMaximaPasajeros;    
     private $colPasajeros;             //Coleccion de objetos Pasajero
-    private $objPesponsable;          //Coleccion de objetos Responsables
+    private $objPesponsable;          //Objeto Responsable
     
     public function __construct($codigo,$dest,$cantMax,$colPasajeros,$responsable)
     {
@@ -52,8 +52,17 @@ class Viaje{
         return "*CODIGO DEL VIAJE: ".$this->getCodigo()."\n".
                "*DESTINO: ".$this->getDestino()."\n".
                "*CAMTIDAD MAXIMA DE PASAJEROS: ".$this->getCantMaxima()."\n".
-               "*PASAJEROS: "."\n".implode(',',$this->getPasajeros())."\n".
-               "*RESPONSABLE: "."\n".implode(',',$this->getResponsable())."\n";
+               "*PASAJEROS: "."\n".$this->mostrarPasajeros()."\n".
+               "*RESPONSABLE: "."\n".$this->getResponsable()."\n";
+    }
+    //MUESTRA paajeros
+    public function mostrarPasajeros(){
+        $pasajeros=$this->getPasajeros();
+        $i=1;
+        foreach($pasajeros as $pasajero){
+            echo $i.": ".$pasajero."\n";
+            $i++;
+        }
     }
     //Verifica que haya lugar para agregar un pasajero mas
     public function verificaEspacio(){
@@ -66,42 +75,46 @@ class Viaje{
         return $verifica;
     }
 
-    //Se debe verificar que el pasajero no este cargado mas de una vez en el viaje
-    public function agregarPasajero($objPasajero){
-        $j=0;
+    // VERIFICA que el pasajero no este cargado mas de una vez en el viaje
+    public function pasajeroCargado($documento){
+        $dni=$documento;
         $coleccionPasajeros=$this->getPasajeros();
-        $dniPasajero=$objPasajero->getDni();
-        foreach($coleccionPasajeros as $pasajero){
-            if($pasajero->getDni()==$dniPasajero){
-                $j++;
+        $bandera=false;
+        $i=0;
+        while($i<count($coleccionPasajeros) && $bandera){
+            if($coleccionPasajeros[$i]->getDni()==$dni){
+                $bandera=true;
             }
+            $i++;
         }
-        if($j==0){
-            array_push($coleccionPasajeros,$objPasajero);
-            $nuevaColPasajeros=$this->setPasajeros($coleccionPasajeros);
-        }else{
-            $nuevaColPasajeros=-1;
-        }
+        return $bandera;
+    }
+    //Agrega un pasajero
+    public function agregarPasajero($objPasajero){
+        $coleccionPasajeros=$this->getPasajeros();
+        array_push($coleccionPasajeros,$objPasajero);
+        $nuevaColPasajeros=$this->setPasajeros($coleccionPasajeros);
         return $nuevaColPasajeros;
     }
-
-    //Verifica que no haya un responsable cargado mas de una vez
+    
+    // Agrega responsable
     public function agregarResponsable($objResponsable){
-        $j=0;
-        $coleccionResponsables=$this->getResponsable();
-        $numEmpleado=$objResponsable->getNumEmpleado();
-        foreach($coleccionResponsables as $responsable){
-            if($responsable->getNumEmpleado()==$numEmpleado){
-                $j++;
-            }
+        $responsable=$this->getResponsable();
+        array_push($coleccionPasajeros,$objResponsable);
+        $nuevaColPasajeros=$this->setPasajeros($coleccionPasajeros);
+        return $nuevaColPasajeros;
+    }
+    // Muestra coleccion de pasajeros
+    public function muestraPasajeros(){
+        $colPasajeros=$this->getPasajeros();
+        $cadena=" ";
+        $numPasajero=0;
+        for($i=0;$i<count($colPasajeros);$i++){
+            $numPasajero++;
+            $pasajero=$colPasajeros[$i];
+            $cadena= $cadena."Pasajero: ".$numPasajero.":\n".$pasajero."\n";
         }
-        if($j==0){
-            array_push($coleccionResponsables,$objResponsable);
-            $nuevaColResponsables=$this->setResponsable($coleccionResponsables);
-        }else{
-            $nuevaColResponsables=-1;
-        }
-        return $nuevaColResponsables;
+        return $cadena;
     }
     
     //Funcion que SETEA los valores que tenia objViaje(codigo,destino,capacidad maxima)
@@ -109,7 +122,5 @@ class Viaje{
         $this->setCodigo($codigo);
         $this->setDestino($destino);
         $this->setCantMaxima($cantMaxima);
-    
-
     }
 }

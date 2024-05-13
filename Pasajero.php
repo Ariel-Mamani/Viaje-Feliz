@@ -37,7 +37,9 @@ class Pasajeros{
     public function setTelefono($num){
         $this->telefono=$num;
     }
-   
+    public function modificarPasajero(){
+        
+    }
     public function __toString()
     {
         return "   NOMBRE: ".$this->getNombre()."\n".
